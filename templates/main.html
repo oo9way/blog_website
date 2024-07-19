@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container mt-3">
+        {% for cat in categories %}
+            <a href="?cat={{cat.id}}" class="btn btn-outline-primary btn-sm">
+                {{cat}}
+            </a>
+        {% endfor %}
+    </div>
+
+    <div class="container mt-5">
+        <h2>Postlar</h2>
+        <div class="row">
+            
+            {% for post in posts %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://picsum.photos/300/200" alt="" class="card-img">
+                      <h5 class="card-title mt-2">{{post.title}}</h5>
+                      <p class="card-text">{{post.body|truncatechars:"100"}}</div>
+
+                        <div class="p-3">
+                            <a href="{% url "detail" post.id  %}" class="btn btn-primary">
+                                Batafsil o'qish
+                            </a>
+                        </div>
+                    <div class="card-footer">
+                      <small class="text-muted">{{post.created_at}}</small>
+                    </div>
+                  </div>
+            </div>
+            {% endfor %}
+            
+          </div>
+
+    </div>
+  
+{% endblock content %}

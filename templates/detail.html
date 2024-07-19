@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    {% if post %}
+        <h2>{{post.title}}</h2>
+        <span><i>
+            O'qish uchun {{post.read_min}} daqiqa sarflanadi <br>
+            Sana {{post.created_at}}
+        </i></span>
+        <hr>
+        <p>
+            {{post.body}}
+        </p>
+
+        <a href="{% url "main" %}">Ortga</a>
+
+    {% else %}
+    <h4 align="center">Post topilmadi</h4>
+    {% endif %}
+</div>
+
+{% endblock content %}
