@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+   {% if resume %}
+   {{resume.body|safe}}
+   {% else %}
+   <h1>Resume topilmadi</h1>
+   {% endif %}
+</div>
+
+{% endblock content %}

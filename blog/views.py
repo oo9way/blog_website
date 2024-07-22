@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from blog.models import Post, Category
+from blog.models import Post, Category, Resume, Message
 from django.db.models import Q
 
 # Create your views here.
@@ -36,3 +36,33 @@ def post_detail(request, post_id):
         'post':post
     }
     return render(request, "detail.html", context)
+
+
+def resume_page(request):
+    resume = Resume.objects.filter(is_active=True).first()
+
+    context = {
+        "resume":resume
+    }
+
+    return render(request, "resume.html", context)
+
+
+def message_page(request):
+    errors = ""
+    success = ""
+    if request.method == "POST":
+        phone = request.POST.get("phone", None)
+        text = request.POST.get("text", None)
+
+        if phone and text:
+            Message.objects.create(phone=phone, text=text)
+            success = "Sizning xabaringiz yuborildi"
+        else:
+            errors = "Phone and text are required"
+
+    context = {
+        "errors": errors,
+        "success": success
+    }
+    return render(request, "message.html", context)
