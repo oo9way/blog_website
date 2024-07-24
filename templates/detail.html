@@ -4,6 +4,17 @@
 
 <div class="container mt-5">
     {% if post %}
+        {% if success_msg %}
+        <div class="alert alert-success">
+            {{success_msg}}
+        </div>
+        {% endif %}
+
+        {% if error_msg %}
+        <div class="alert alert-danger">
+            {{error_msg}}
+        </div>
+        {% endif %}
         <h2>{{post.title}}</h2>
         <span><i>
             O'qish uchun {{post.read_min}} daqiqa sarflanadi <br>
@@ -13,6 +24,38 @@
         <p>
             {{post.body}}
         </p>
+        <hr>
+        <span>Comments</span>
+
+        {% if post.comments %}
+            <ul>
+                {% for comment in post.comments.all %}
+                    {% if comment.is_approved %}
+                        <li>{{comment.text}} - {{comment.created_at}}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <hr>
+
+        <form method="post" class="pt-3">
+            <h3>Izoh qoldiring</h3>
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="comment">
+            <div class="form-group my-3">
+                <textarea name="text" id="comment" class="form-control" required></textarea>
+            </div>
+            <button class="btn btn-primary">Izoh qoldirish</button>
+        </form>
+
+        <form method="post" class="pt-3 mb-5">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="like">
+            <button type="submit" class="btn btn-ouline-danger">
+                {{post.likes.count}} Likes
+            </button>
+        </form>
 
         <a href="{% url "main" %}">Ortga</a>
 

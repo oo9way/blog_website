@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from blog.models import Post, Category, Resume, Message
+from blog.models import Post, Category, Resume, Message, Comment, Like
 from django.db.models import Q
 
 # Create your views here.
@@ -25,15 +25,36 @@ def main_page(request):
 
 
 def post_detail(request, post_id):
+    success_msg = None
+    error_msg = None
+    
     try:
         post = Post.objects.get(id=post_id)
 
     except Post.DoesNotExist:
         post = None
     
+
+    if request.method == "POST":
+        if request.POST.get("form_type") == "comment":
+            Comment.objects.create(
+                text=request.POST.get("text"),
+                post=post
+            )
+            success_msg = "Izoh qo'shildi"
+        if request.POST.get("form_type") == "like":
+            user = request.META.get("HTTP_USER_AGENT")
+            if Like.objects.filter(user_agent=user, post=post).exists():
+                error_msg = "You've have already liked this post"
+            else:
+                Like.objects.create(user_agent=user, post=post)
+                success_msg = "You are like the post"
+
     
     context = {
-        'post':post
+        'post':post,
+        "success_msg": success_msg,
+        "error_msg": error_msg
     }
     return render(request, "detail.html", context)
 

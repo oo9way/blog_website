@@ -24,6 +24,7 @@ class Post(models.Model):
     read_min = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now=True)
+    likes_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -32,6 +33,21 @@ class Post(models.Model):
     class Meta:
         verbose_name = "Post"
         verbose_name_plural = "Postlar"
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
+    text = models.TextField()
+    is_approved = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.text[:100]
+    
+class Like(models.Model):
+    user_agent = models.CharField(max_length=512)
+    post = models.ForeignKey(Post, related_name="likes", on_delete=models.CASCADE)
     
 
 class Resume(models.Model):
